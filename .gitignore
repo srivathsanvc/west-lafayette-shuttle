@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local environment
+.env
+.env.local
+
+# Node (if ever used for tooling)
+node_modules/
+npm-debug.log*
+
+# Misc
+*.log
+Thumbs.db
