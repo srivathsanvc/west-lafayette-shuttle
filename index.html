@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>West Lafayette Shuttle Timetable</title>
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0f172a">
+<title>Purdue Shuttle Timetable</title>
 <style>
   :root {
+    color-scheme: light dark;
     --reindeer: #1a6b9a;
     --reindeer-light: #e8f3fa;
     --limo: #c0562a;
@@ -16,9 +19,35 @@
     --text: #1c2230;
     --muted: #6b7280;
     --heading: #0f172a;
+    --surface-alt: #f1f5f9;
+    --row-hover: #f8fafc;
+    --note-bg: #fffbeb;
+    --note-border: #fcd34d;
+    --note-text: #92400e;
+    --footer-bg: #0f172a;
+    --offset: #8a5a00;
+    --offset-bg: #fdf3df;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1419;
+      --card: #1a2130;
+      --border: #2d3548;
+      --text: #e4e9f2;
+      --muted: #a3adc2;
+      --heading: #f8fafc;
+      --surface-alt: #212938;
+      --row-hover: #202838;
+      --note-bg: #2b2410;
+      --note-border: #8a6d1f;
+      --note-text: #f0cf6a;
+      --offset: #e0b355;
+      --offset-bg: #2b2410;
+    }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; font-variant-numeric: tabular-nums; }
 
   /* HERO */
   .hero {
@@ -77,79 +106,44 @@
   .tab-btn.active.ord-tab .airport-code { background: #4f46e5; }
   .tab-btn.active.ind-tab .airport-code { background: #059669; }
 
-  /* SUB TABS */
-  .sub-tab-bar {
-    display: flex;
-    background: #f1f5f9;
-    border-bottom: 1px solid var(--border);
-    padding: 0 20px;
-    gap: 0;
-  }
-  .sub-tab-btn {
-    padding: 10px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .sub-tab-btn:hover { color: var(--heading); }
-  .sub-tab-btn.active { color: var(--heading); border-bottom-color: var(--heading); }
-
   /* TAB PANELS */
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
-  .sub-panel { display: none; }
-  .sub-panel.active { display: block; }
 
   /* MAIN */
-  .main { max-width: 1000px; margin: 0 auto; padding: 24px 16px 60px; }
-
-  /* INFO CARDS */
-  .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  .info-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-  }
-  .info-card h4 { font-size: 13px; font-weight: 700; color: var(--heading); margin-bottom: 7px; }
-  .info-card ul { padding-left: 15px; }
-  .info-card li { font-size: 12px; color: var(--muted); line-height: 1.65; }
-  .info-card a { color: var(--reindeer); text-decoration: none; }
-  .info-card a:hover { text-decoration: underline; }
+  .main { max-width: 1080px; margin: 0 auto; padding: 24px 16px 60px; }
 
   .note-bar {
-    background: #fffbeb;
-    border: 1px solid #fcd34d;
+    background: var(--note-bg);
+    border: 1px solid var(--note-border);
     border-radius: 8px;
     padding: 9px 13px;
     font-size: 12px;
-    color: #92400e;
-    margin-bottom: 12px;
+    color: var(--note-text);
+    margin-bottom: 16px;
     line-height: 1.5;
   }
 
-  .direction-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  /* SIDE-BY-SIDE TABLES */
+  .tables-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+    margin-bottom: 28px;
+  }
+  .table-col h3 {
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--heading);
-    margin-bottom: 10px;
     text-transform: uppercase;
     letter-spacing: 0.4px;
+    margin-bottom: 9px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
+  .table-scroll { overflow-x: auto; border-radius: 10px; }
 
   /* TABLE */
   .timetable {
@@ -160,23 +154,23 @@
     overflow: hidden;
     box-shadow: 0 1px 4px rgba(0,0,0,0.07);
     border: 1px solid var(--border);
-    margin-bottom: 6px;
   }
   .timetable thead th {
-    background: #f1f5f9;
+    background: var(--surface-alt);
     color: var(--muted);
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.6px;
-    padding: 9px 13px;
+    padding: 9px 12px;
     text-align: left;
     border-bottom: 1px solid var(--border);
+    white-space: nowrap;
   }
   .timetable tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
   .timetable tbody tr:last-child { border-bottom: none; }
-  .timetable tbody tr:hover { background: #f8fafc; }
-  .timetable td { padding: 10px 13px; vertical-align: middle; }
+  .timetable tbody tr:hover { background: var(--row-hover); }
+  .timetable td { padding: 8px 12px; vertical-align: middle; white-space: nowrap; }
 
   .provider-badge {
     display: inline-block;
@@ -189,14 +183,61 @@
   .badge-reindeer { background: var(--reindeer-light); color: var(--reindeer); }
   .badge-limo { background: var(--limo-light); color: var(--limo); }
 
-  .time-big { font-size: 16px; font-weight: 700; color: var(--heading); }
-  .time-tz { font-size: 11px; color: var(--muted); margin-left: 2px; font-weight: 500; }
-  .time-arrives { font-size: 14px; font-weight: 600; }
-  .stops-text { font-size: 12px; color: var(--muted); line-height: 1.45; }
+  .time-big { font-size: 14px; font-weight: 700; color: var(--heading); }
+  .time-tz { font-size: 10.5px; color: var(--muted); margin-left: 2px; font-weight: 500; }
+  .time-arrives { font-size: 13px; font-weight: 600; }
 
-  .price-tag { font-size: 14px; font-weight: 700; color: var(--heading); }
-  .price-note { font-size: 11px; color: var(--muted); }
+  /* PROVIDER REFERENCE CARDS */
+  .section-label {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--heading);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 10px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+  }
+  .provider-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .provider-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .provider-card h4 { font-size: 14.5px; font-weight: 800; color: var(--heading); margin-bottom: 12px; display: flex; align-items: center; gap: 7px; }
+  .route-block { margin-bottom: 11px; }
+  .route-block .dir-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--muted);
+    margin-bottom: 3px;
+    display: block;
+  }
+  .route-block .stops { font-size: 12.5px; color: var(--text); line-height: 1.6; }
+  .stops .off {
+    background: var(--offset-bg);
+    color: var(--offset);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 2px;
+  }
+  .stops .flag { font-weight: 600; }
+  .caveat { display: block; margin-top: 3px; font-size: 10.5px; font-style: italic; color: var(--muted); }
+  .trip-dur { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 3px; }
 
+  .card-meta { font-size: 12px; color: var(--muted); line-height: 1.7; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .card-meta strong { color: var(--heading); font-weight: 700; }
+
+  .book-row { margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .book-link {
     display: inline-block;
     padding: 5px 11px;
@@ -209,11 +250,10 @@
   .book-link:hover { opacity: 0.82; }
   .book-reindeer { background: var(--reindeer); color: white; }
   .book-limo { background: var(--limo); color: white; }
-
-  .footnote { font-size: 11px; color: var(--muted); margin-top: 6px; }
+  .phone { font-size: 12px; color: var(--muted); }
 
   .footer {
-    background: var(--heading);
+    background: var(--footer-bg);
     color: rgba(255,255,255,0.45);
     text-align: center;
     padding: 18px;
@@ -222,7 +262,7 @@
   .footer a { color: rgba(255,255,255,0.65); text-decoration: none; }
 
   @media (max-width: 650px) {
-    .timetable thead th:nth-child(3), .timetable td:nth-child(3) { display: none; }
+    .tables-row { grid-template-columns: 1fr; }
     .tab-btn { padding: 12px 16px; font-size: 13px; }
   }
 </style>
@@ -231,12 +271,12 @@
 
 <!-- HERO -->
 <div class="hero">
-  <h1>West Lafayette Shuttle Timetable</h1>
+  <h1>Purdue Shuttle Timetable</h1>
   <p>Combined schedules — Reindeer Shuttle &amp; Lafayette Limo</p>
   <div class="legend">
     <div class="legend-item"><div class="legend-dot" style="background:#1a6b9a"></div> Reindeer Shuttle</div>
     <div class="legend-item"><div class="legend-dot" style="background:#c0562a"></div> Lafayette Limo</div>
-    <div class="legend-item">📍 WL times = Eastern (ET) &nbsp;·&nbsp; ORD/Chicago times = Central (CT)</div>
+    <div class="legend-item">🎓 Purdue times = Eastern (ET) &nbsp;·&nbsp; ORD/Chicago times = Central (CT)</div>
   </div>
 </div>
 
@@ -252,169 +292,97 @@
 
 <!-- ═══════════════════ ORD PANEL ═══════════════════ -->
 <div id="panel-ord" class="tab-panel active">
-  <div class="sub-tab-bar">
-    <button class="sub-tab-btn active" onclick="switchSub('ord', 'to-wl', this)">✈ ORD → West Lafayette</button>
-    <button class="sub-tab-btn" onclick="switchSub('ord', 'to-ord', this)">🏠 West Lafayette → ORD</button>
-  </div>
-
   <div class="main">
 
-    <!-- Info cards -->
-    <div class="info-grid">
-      <div class="info-card">
-        <h4>🦌 Reindeer Shuttle — ORD</h4>
-        <ul>
-          <li>One-way: <strong>$70</strong> public · <strong>$65</strong> student</li>
-          <li>Walk-up cash: $75 · Extra bag: +$10</li>
-          <li>Airport pickup/dropoff: <strong>Multi-Modal Facility (MMF)</strong></li>
-          <li>Drop-off: Terminal 5 only</li>
-          <li><a href="https://www.reindeershuttle.com/book-now/" target="_blank">Book online ↗</a> · 📞 765-637-5124</li>
-        </ul>
+    <div class="note-bar">⏰ Purdue is <strong>Eastern Time (ET)</strong>; O'Hare/Chicago is <strong>Central Time (CT)</strong> — 1 hr behind ET. Arrive ORD 2 hrs before domestic, 3 hrs before international flights.</div>
+
+    <div class="tables-row">
+      <div class="table-col" id="ord-to-ord">
+        <h3>🎓 Purdue → ✈ ORD</h3>
+        <div class="table-scroll">
+        <table class="timetable">
+          <thead><tr><th>Provider</th><th>Departs</th><th>Arrives</th></tr></thead>
+          <tbody>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td><span class="time-big">4:15 AM</span><span class="time-tz">ET</span></td><td><span class="time-arrives">6:40 AM CT</span></td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td><span class="time-big">6:00 AM</span><span class="time-tz">ET</span></td><td><span class="time-arrives">8:30–8:45 AM CT</span></td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td><span class="time-big">10:00 AM</span><span class="time-tz">ET</span></td><td><span class="time-arrives">12:30–12:45 PM CT</span></td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td><span class="time-big">10:15 AM</span><span class="time-tz">ET</span></td><td><span class="time-arrives">12:40 PM CT</span></td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td><span class="time-big">2:00 PM</span><span class="time-tz">ET</span></td><td><span class="time-arrives">4:30–4:45 PM CT</span></td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td><span class="time-big">3:15 PM</span><span class="time-tz">ET</span></td><td><span class="time-arrives">5:40 PM CT</span></td></tr>
+          </tbody>
+        </table>
+        </div>
       </div>
-      <div class="info-card">
-        <h4>🚐 Lafayette Limo — ORD</h4>
-        <ul>
-          <li>One-way: <strong>$55</strong> online · $60 walk-up cash</li>
-          <li>Round trip: $110 · Extra bag: +$10</li>
-          <li>Bus only runs if reserved 24 hrs in advance</li>
-          <li>Airport pickup: <strong>MMF Bay 5</strong> · Drop-off: Terminal 2 or 5</li>
-          <li><a href="https://laflimo.jumpseatapp.com" target="_blank">Book online ↗</a> · 📞 765-497-3828</li>
-        </ul>
+
+      <div class="table-col" id="ord-to-wl">
+        <h3>✈ ORD → 🎓 Purdue</h3>
+        <div class="table-scroll">
+        <table class="timetable">
+          <thead><tr><th>Provider</th><th>Departs</th><th>Arrives</th></tr></thead>
+          <tbody>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td><span class="time-big">8:00 AM</span><span class="time-tz">CT</span></td><td><span class="time-arrives">12:00 PM ET</span></td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td><span class="time-big">9:15 AM</span><span class="time-tz">CT</span></td><td><span class="time-arrives">1:00–1:30 PM ET</span></td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td><span class="time-big">1:15 PM</span><span class="time-tz">CT</span></td><td><span class="time-arrives">5:00–5:30 PM ET</span></td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td><span class="time-big">2:00 PM</span><span class="time-tz">CT</span></td><td><span class="time-arrives">6:00 PM ET</span></td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td><span class="time-big">5:15 PM</span><span class="time-tz">CT</span></td><td><span class="time-arrives">9:00–9:30 PM ET</span></td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td><span class="time-big">7:00 PM</span><span class="time-tz">CT</span></td><td><span class="time-arrives">11:00 PM ET</span></td></tr>
+          </tbody>
+        </table>
+        </div>
       </div>
     </div>
 
-    <!-- ORD → WL -->
-    <div id="ord-to-wl" class="sub-panel active">
-      <div class="note-bar">⏰ Departure times at ORD are <strong>Central Time (CT)</strong>. Arrival in West Lafayette is <strong>Eastern Time (ET)</strong> — 1 hr ahead of CT.</div>
-      <table class="timetable">
-        <thead>
-          <tr>
-            <th>Provider</th>
-            <th>Departs ORD</th>
-            <th>WL Stops (in order)</th>
-            <th>Arrives WL</th>
-            <th>Fare</th>
-            <th>Book</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">8:00 AM</span><span class="time-tz">CT</span></td>
-            <td class="stops-text">Limo Office → State St/PMU → Purdue West → Home2Suites WL</td>
-            <td><span class="time-arrives">12:00 PM ET</span></td>
-            <td><span class="price-tag">$55</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">9:15 AM</span><span class="time-tz">CT</span></td>
-            <td class="stops-text">PMU → Co-Rec Circle → Quality Inn</td>
-            <td><span class="time-arrives">1:00–1:30 PM ET</span></td>
-            <td><span class="price-tag">$70</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">1:15 PM</span><span class="time-tz">CT</span></td>
-            <td class="stops-text">PMU → Co-Rec Circle → Quality Inn</td>
-            <td><span class="time-arrives">5:00–5:30 PM ET</span></td>
-            <td><span class="price-tag">$70</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">2:00 PM</span><span class="time-tz">CT</span></td>
-            <td class="stops-text">Limo Office → State St/PMU → Purdue West → Home2Suites WL</td>
-            <td><span class="time-arrives">6:00 PM ET</span></td>
-            <td><span class="price-tag">$55</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">5:15 PM</span><span class="time-tz">CT</span></td>
-            <td class="stops-text">PMU → Co-Rec Circle → Quality Inn</td>
-            <td><span class="time-arrives">9:00–9:30 PM ET</span></td>
-            <td><span class="price-tag">$70</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">7:00 PM</span><span class="time-tz">CT</span></td>
-            <td class="stops-text">Limo Office → State St/PMU → Purdue West → Home2Suites WL</td>
-            <td><span class="time-arrives">11:00 PM ET</span></td>
-            <td><span class="price-tag">$55</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="section-label">Provider reference — stops, fare &amp; booking</div>
+    <div class="provider-grid">
+      <div class="provider-card">
+        <h4>🦌 Reindeer Shuttle</h4>
+        <div class="route-block">
+          <span class="dir-label">Purdue → ORD</span>
+          <div class="stops">Quality Inn → Co-Rec Circle<span class="off">+15m</span> → PMU<span class="off">+30m</span></div>
+          <div class="trip-dur">⏱ Trip duration: 3h30–3h45m</div>
+        </div>
+        <div class="route-block">
+          <span class="dir-label">ORD → Purdue</span>
+          <div class="stops">PMU → Co-Rec Circle → Quality Inn
+            <span class="caveat">Exact per-stop times not published — arrival window covers all three</span>
+          </div>
+          <div class="trip-dur">⏱ Trip duration: 2h45–3h15m</div>
+        </div>
+        <div class="card-meta">
+          One-way: <strong>$70</strong> non-student · <strong>$65</strong> student · walk-up cash $75 · extra bag +$10<br>
+          Pickup/drop-off: <strong>Multi-Modal Facility (MMF)</strong> · drop-off Terminal 5 only
+        </div>
+        <div class="book-row">
+          <a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book online</a>
+          <span class="phone">📞 765-637-5124</span>
+        </div>
+      </div>
 
-    <!-- WL → ORD -->
-    <div id="ord-to-ord" class="sub-panel">
-      <div class="note-bar">⏰ Departure times from WL are <strong>Eastern Time (ET)</strong>. Arrival at ORD is <strong>Central Time (CT)</strong> — 1 hr behind ET. Arrive ORD 2 hrs before domestic, 3 hrs before international flights.</div>
-      <table class="timetable">
-        <thead>
-          <tr>
-            <th>Provider</th>
-            <th>Departs WL</th>
-            <th>WL Pickup Stops (in order)</th>
-            <th>Arrives ORD</th>
-            <th>Fare</th>
-            <th>Book</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">4:15 AM</span><span class="time-tz">ET</span></td>
-            <td class="stops-text">Limo Office (4:15) → State St/PMU (4:30) → Purdue West (4:40) → Home2Suites (4:50) → Jasper Co. Airport (4:25 CT)</td>
-            <td><span class="time-arrives">6:40 AM CT</span></td>
-            <td><span class="price-tag">$55</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">6:00 AM</span><span class="time-tz">ET</span></td>
-            <td class="stops-text">Quality Inn (6:00) → Co-Rec Circle (6:15) → PMU (6:30)</td>
-            <td><span class="time-arrives">8:30–8:45 AM CT</span></td>
-            <td><span class="price-tag">$70</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">10:00 AM</span><span class="time-tz">ET</span></td>
-            <td class="stops-text">Quality Inn (10:00) → Co-Rec Circle (10:15) → PMU (10:30)</td>
-            <td><span class="time-arrives">12:30–12:45 PM CT</span></td>
-            <td><span class="price-tag">$70</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">10:15 AM</span><span class="time-tz">ET</span></td>
-            <td class="stops-text">Limo Office (10:15) → State St/PMU (10:30) → Purdue West (10:40) → Home2Suites (10:50) → Jasper Co. Airport (10:25 CT)</td>
-            <td><span class="time-arrives">12:40 PM CT</span></td>
-            <td><span class="price-tag">$55</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">2:00 PM</span><span class="time-tz">ET</span></td>
-            <td class="stops-text">Quality Inn (2:00) → Co-Rec Circle (2:15) → PMU (2:30)</td>
-            <td><span class="time-arrives">4:30–4:45 PM CT</span></td>
-            <td><span class="price-tag">$70</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">3:15 PM</span><span class="time-tz">ET</span></td>
-            <td class="stops-text">Limo Office (3:15) → State St/PMU (3:30) → Purdue West (3:40) → Home2Suites (3:50) → Jasper Co. Airport (3:25 CT)</td>
-            <td><span class="time-arrives">5:40 PM CT</span></td>
-            <td><span class="price-tag">$55</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="provider-card">
+        <h4>🚐 Lafayette Limo</h4>
+        <div class="route-block">
+          <span class="dir-label">Purdue → ORD</span>
+          <div class="stops">Limo Office → State St/PMU<span class="off">+15m</span> → Purdue West<span class="off">+25m</span> → Home2Suites<span class="off">+35m</span> → Jasper Co. Airport<span class="off">+70m</span>
+            <span class="caveat">Jasper Co. stop crosses into Central Time</span>
+          </div>
+          <div class="trip-dur">⏱ Trip duration: 3h25m</div>
+        </div>
+        <div class="route-block">
+          <span class="dir-label">ORD → Purdue</span>
+          <div class="stops">Limo Office → State St/PMU → Purdue West → Home2Suites WL
+            <span class="caveat">Exact per-stop times not published</span>
+          </div>
+          <div class="trip-dur">⏱ Trip duration: 3h00m</div>
+        </div>
+        <div class="card-meta">
+          One-way: <strong>$55</strong> online · <strong>$60</strong> walk-up cash · round trip $110 · extra bag +$10 · bus only runs if reserved 24 hrs ahead<br>
+          Pickup: <strong>MMF Bay 5</strong> · drop-off Terminal 2 or 5
+        </div>
+        <div class="book-row">
+          <a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book online</a>
+          <span class="phone">📞 765-497-3828</span>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -422,346 +390,116 @@
 
 <!-- ═══════════════════ IND PANEL ═══════════════════ -->
 <div id="panel-ind" class="tab-panel">
-  <div class="sub-tab-bar">
-    <button class="sub-tab-btn active" onclick="switchSub('ind', 'to-wl', this)">✈ IND → West Lafayette</button>
-    <button class="sub-tab-btn" onclick="switchSub('ind', 'to-ind', this)">🏠 West Lafayette → IND</button>
-  </div>
-
   <div class="main">
 
-    <!-- Info cards -->
-    <div class="info-grid">
-      <div class="info-card">
-        <h4>🦌 Reindeer Shuttle — IND</h4>
-        <ul>
-          <li>One-way: <strong>$36</strong> public · <strong>$33</strong> student</li>
-          <li>Walk-up cash: $38 · Extra bag: +$5</li>
-          <li>Courtyard Marriott Lafayette = flag stop (reserve in advance)</li>
-          <li>Airport zone: <strong>Zone 5, Ground Transportation Center</strong></li>
-          <li><a href="https://www.reindeershuttle.com/book-now/" target="_blank">Book online ↗</a> · 📞 765-637-5124</li>
-        </ul>
+    <div class="note-bar">⏰ Both Purdue and Indianapolis are <strong>Eastern Time (ET)</strong> — same timezone. Arrive IND at least 90 min before your flight.</div>
+
+    <div class="tables-row">
+      <div class="table-col" id="ind-to-ind">
+        <h3>🎓 Purdue → ✈ IND</h3>
+        <div class="table-scroll">
+        <table class="timetable">
+          <thead><tr><th>Provider</th><th>Departs</th><th>Arrives</th></tr></thead>
+          <tbody>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">4:30 AM</td><td class="time-arrives">6:30 AM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">5:00 AM</td><td class="time-arrives">6:45–7:15 AM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">6:30 AM</td><td class="time-arrives">8:30 AM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">7:00 AM</td><td class="time-arrives">8:45–9:15 AM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">8:30 AM</td><td class="time-arrives">10:30 AM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">9:00 AM</td><td class="time-arrives">10:45–11:15 AM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">10:30 AM</td><td class="time-arrives">12:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">11:00 AM</td><td class="time-arrives">12:45–1:15 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">12:30 PM</td><td class="time-arrives">2:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">1:00 PM</td><td class="time-arrives">2:45–3:15 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">2:30 PM</td><td class="time-arrives">4:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">3:00 PM</td><td class="time-arrives">4:45–5:15 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">4:30 PM</td><td class="time-arrives">6:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">5:00 PM</td><td class="time-arrives">6:45–7:15 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">6:30 PM</td><td class="time-arrives">8:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">7:00 PM</td><td class="time-arrives">8:45–9:15 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">8:30 PM</td><td class="time-arrives">10:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">10:30 PM</td><td class="time-arrives">12:30 AM</td></tr>
+          </tbody>
+        </table>
+        </div>
       </div>
-      <div class="info-card">
-        <h4>🚐 Lafayette Limo — IND</h4>
-        <ul>
-          <li>One-way: <strong>$25</strong> online · $27 phone · Round trip: $45</li>
-          <li>Children 2 &amp; under: free · Ages 3–12: $12.50 online</li>
-          <li>9 runs daily, 7 days a week</li>
-          <li>Airport zone: <strong>Zone 5, Ground Transportation Center</strong></li>
-          <li><a href="https://laflimo.jumpseatapp.com" target="_blank">Book online ↗</a> · 📞 765-497-3828</li>
-        </ul>
+
+      <div class="table-col" id="ind-to-wl">
+        <h3>✈ IND → 🎓 Purdue</h3>
+        <div class="table-scroll">
+        <table class="timetable">
+          <thead><tr><th>Provider</th><th>Departs</th><th>Arrives</th></tr></thead>
+          <tbody>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">6:30 AM</td><td class="time-arrives">8:30 AM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">7:15 AM</td><td class="time-arrives">8:30–8:50 AM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">8:30 AM</td><td class="time-arrives">10:30 AM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">9:15 AM</td><td class="time-arrives">10:30–10:50 AM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">10:30 AM</td><td class="time-arrives">12:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">11:15 AM</td><td class="time-arrives">12:30–12:50 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">12:30 PM</td><td class="time-arrives">2:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">1:15 PM</td><td class="time-arrives">2:30–2:50 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">2:30 PM</td><td class="time-arrives">4:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">3:15 PM</td><td class="time-arrives">4:30–4:50 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">4:30 PM</td><td class="time-arrives">6:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">5:15 PM</td><td class="time-arrives">6:30–6:50 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">6:30 PM</td><td class="time-arrives">8:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">7:15 PM</td><td class="time-arrives">8:30–8:50 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">8:30 PM</td><td class="time-arrives">10:30 PM</td></tr>
+            <tr><td><span class="provider-badge badge-reindeer">Reindeer</span></td><td class="time-big">9:15 PM</td><td class="time-arrives">10:30–10:50 PM</td></tr>
+            <tr><td><span class="provider-badge badge-limo">Lafayette Limo</span></td><td class="time-big">10:30 PM</td><td class="time-arrives">12:30 AM</td></tr>
+          </tbody>
+        </table>
+        </div>
       </div>
     </div>
 
-    <!-- IND → WL -->
-    <div id="ind-to-wl" class="sub-panel active">
-      <div class="note-bar">⏰ All times Eastern Time (ET). Both IND and West Lafayette are in the same timezone.</div>
-      <table class="timetable">
-        <thead>
-          <tr>
-            <th>Provider</th>
-            <th>Departs IND</th>
-            <th>Stops en Route to WL</th>
-            <th>Arrives WL Area</th>
-            <th>Fare</th>
-            <th>Book</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">6:30 AM</span></td>
-            <td class="stops-text">Courtyard Lafayette (7:40) → Holiday Inn (7:55) → State St/PMU (8:00) → Purdue West (8:10) → Home2Suites (8:20)</td>
-            <td><span class="time-arrives">8:30 AM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">7:15 AM</span></td>
-            <td class="stops-text">Courtyard Lafayette (8:20) → PMU / Co-Rec / Quality Inn</td>
-            <td><span class="time-arrives">8:30–8:50 AM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">8:30 AM</span></td>
-            <td class="stops-text">Courtyard Lafayette (9:40) → Holiday Inn (9:55) → State St/PMU (10:00) → Purdue West (10:10) → Home2Suites (10:20)</td>
-            <td><span class="time-arrives">10:30 AM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">9:15 AM</span></td>
-            <td class="stops-text">Courtyard Lafayette (10:20) → PMU / Co-Rec / Quality Inn</td>
-            <td><span class="time-arrives">10:30–10:50 AM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">10:30 AM</span></td>
-            <td class="stops-text">Courtyard Lafayette (11:40) → Holiday Inn (11:55) → State St/PMU (12:00) → Purdue West (12:10) → Home2Suites (12:20)</td>
-            <td><span class="time-arrives">12:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">11:15 AM</span></td>
-            <td class="stops-text">Courtyard Lafayette (12:20) → PMU / Co-Rec / Quality Inn</td>
-            <td><span class="time-arrives">12:30–12:50 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">12:30 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (1:40) → Holiday Inn (1:55) → State St/PMU (2:00) → Purdue West (2:10) → Home2Suites (2:20)</td>
-            <td><span class="time-arrives">2:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">1:15 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (2:20) → PMU / Co-Rec / Quality Inn</td>
-            <td><span class="time-arrives">2:30–2:50 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">2:30 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (3:40) → Holiday Inn (3:55) → State St/PMU (4:00) → Purdue West (4:10) → Home2Suites (4:20)</td>
-            <td><span class="time-arrives">4:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">3:15 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (4:20) → PMU / Co-Rec / Quality Inn</td>
-            <td><span class="time-arrives">4:30–4:50 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">4:30 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (5:40) → Holiday Inn (5:55) → State St/PMU (6:00) → Purdue West (6:10) → Home2Suites (6:20)</td>
-            <td><span class="time-arrives">6:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">5:15 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (6:20) → PMU / Co-Rec / Quality Inn</td>
-            <td><span class="time-arrives">6:30–6:50 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">6:30 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (7:40) → Holiday Inn (7:55) → State St/PMU (8:00) → Purdue West (8:10) → Home2Suites (8:20)</td>
-            <td><span class="time-arrives">8:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">7:15 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (8:20) → PMU / Co-Rec / Quality Inn</td>
-            <td><span class="time-arrives">8:30–8:50 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">8:30 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (9:40) → Holiday Inn (9:55) → State St/PMU (10:00) → Purdue West (10:10) → Home2Suites (10:20)</td>
-            <td><span class="time-arrives">10:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">9:15 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (10:20) → PMU / Co-Rec / Quality Inn</td>
-            <td><span class="time-arrives">10:30–10:50 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">10:30 PM</span></td>
-            <td class="stops-text">Courtyard Lafayette (11:40) → Holiday Inn (11:55) → State St/PMU (12:00 AM) → Purdue West (12:10 AM) → Home2Suites (12:20 AM)</td>
-            <td><span class="time-arrives">12:30 AM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="section-label">Provider reference — stops, fare &amp; booking</div>
+    <div class="provider-grid">
+      <div class="provider-card">
+        <h4>🦌 Reindeer Shuttle</h4>
+        <div class="route-block">
+          <span class="dir-label">Purdue → IND</span>
+          <div class="stops">Quality Inn → Co-Rec Circle<span class="off">+15m</span> → PMU<span class="off">+30m</span> → <span class="flag">Courtyard†</span><span class="off">+50m</span></div>
+          <div class="trip-dur">⏱ Trip duration: 1h45–2h15m</div>
+        </div>
+        <div class="route-block">
+          <span class="dir-label">IND → Purdue</span>
+          <div class="stops"><span class="flag">Courtyard†</span><span class="off">+65m</span> → PMU / Co-Rec / Quality Inn
+            <span class="caveat">Campus cluster shares one arrival window — no per-stop time published</span>
+          </div>
+          <div class="trip-dur">⏱ Trip duration: 1h15–1h35m</div>
+        </div>
+        <div class="card-meta">
+          One-way: <strong>$36</strong> non-student · <strong>$33</strong> student · walk-up cash $38 · extra bag +$5<br>
+          Airport zone: <strong>Zone 5, Ground Transportation Center</strong> · † Courtyard Marriott Lafayette is a flag stop, reserve in advance
+        </div>
+        <div class="book-row">
+          <a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book online</a>
+          <span class="phone">📞 765-637-5124</span>
+        </div>
+      </div>
 
-    <!-- WL → IND -->
-    <div id="ind-to-ind" class="sub-panel">
-      <div class="note-bar">⏰ All times Eastern Time (ET). Arrive IND at least 90 min before your flight. Last Reindeer run departs WL at 7:00 PM.</div>
-      <table class="timetable">
-        <thead>
-          <tr>
-            <th>Provider</th>
-            <th>Departs WL</th>
-            <th>WL Pickup Stops (in order)</th>
-            <th>Arrives IND</th>
-            <th>Fare</th>
-            <th>Book</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">4:30 AM</span></td>
-            <td class="stops-text">Limo Office (4:30) → Home2Suites (4:35) → Purdue West (4:45) → State St/PMU (4:55) → Holiday Inn (5:05) → Courtyard Lafayette (5:20)</td>
-            <td><span class="time-arrives">6:30 AM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">5:00 AM</span></td>
-            <td class="stops-text">Quality Inn (5:00) → Co-Rec Circle (5:15) → PMU (5:30) → Courtyard† (5:50)</td>
-            <td><span class="time-arrives">6:45–7:15 AM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">6:30 AM</span></td>
-            <td class="stops-text">Limo Office (6:30) → Home2Suites (6:35) → Purdue West (6:45) → State St/PMU (6:55) → Holiday Inn (7:05) → Courtyard Lafayette (7:20)</td>
-            <td><span class="time-arrives">8:30 AM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">7:00 AM</span></td>
-            <td class="stops-text">Quality Inn (7:00) → Co-Rec Circle (7:15) → PMU (7:30) → Courtyard† (7:50)</td>
-            <td><span class="time-arrives">8:45–9:15 AM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">8:30 AM</span></td>
-            <td class="stops-text">Limo Office (8:30) → Home2Suites (8:35) → Purdue West (8:45) → State St/PMU (8:55) → Holiday Inn (9:05) → Courtyard Lafayette (9:20)</td>
-            <td><span class="time-arrives">10:30 AM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">9:00 AM</span></td>
-            <td class="stops-text">Quality Inn (9:00) → Co-Rec Circle (9:15) → PMU (9:30) → Courtyard† (9:50)</td>
-            <td><span class="time-arrives">10:45–11:15 AM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">10:30 AM</span></td>
-            <td class="stops-text">Limo Office (10:30) → Home2Suites (10:35) → Purdue West (10:45) → State St/PMU (10:55) → Holiday Inn (11:05) → Courtyard Lafayette (11:20)</td>
-            <td><span class="time-arrives">12:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">11:00 AM</span></td>
-            <td class="stops-text">Quality Inn (11:00) → Co-Rec Circle (11:15) → PMU (11:30) → Courtyard† (11:50)</td>
-            <td><span class="time-arrives">12:45–1:15 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">12:30 PM</span></td>
-            <td class="stops-text">Limo Office (12:30) → Home2Suites (12:35) → Purdue West (12:45) → State St/PMU (12:55) → Holiday Inn (1:05) → Courtyard Lafayette (1:20)</td>
-            <td><span class="time-arrives">2:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">1:00 PM</span></td>
-            <td class="stops-text">Quality Inn (1:00) → Co-Rec Circle (1:15) → PMU (1:30) → Courtyard† (1:50)</td>
-            <td><span class="time-arrives">2:45–3:15 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">2:30 PM</span></td>
-            <td class="stops-text">Limo Office (2:30) → Home2Suites (2:35) → Purdue West (2:45) → State St/PMU (2:55) → Holiday Inn (3:05) → Courtyard Lafayette (3:20)</td>
-            <td><span class="time-arrives">4:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">3:00 PM</span></td>
-            <td class="stops-text">Quality Inn (3:00) → Co-Rec Circle (3:15) → PMU (3:30) → Courtyard† (3:50)</td>
-            <td><span class="time-arrives">4:45–5:15 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">4:30 PM</span></td>
-            <td class="stops-text">Limo Office (4:30) → Home2Suites (4:35) → Purdue West (4:45) → State St/PMU (4:55) → Holiday Inn (5:05) → Courtyard Lafayette (5:20)</td>
-            <td><span class="time-arrives">6:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">5:00 PM</span></td>
-            <td class="stops-text">Quality Inn (5:00) → Co-Rec Circle (5:15) → PMU (5:30) → Courtyard† (5:50)</td>
-            <td><span class="time-arrives">6:45–7:15 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">6:30 PM</span></td>
-            <td class="stops-text">Limo Office (6:30) → Home2Suites (6:35) → Purdue West (6:45) → State St/PMU (6:55) → Holiday Inn (7:05) → Courtyard Lafayette (7:20)</td>
-            <td><span class="time-arrives">8:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-reindeer">Reindeer</span></td>
-            <td><span class="time-big">7:00 PM</span></td>
-            <td class="stops-text">Quality Inn (7:00) → Co-Rec Circle (7:15) → PMU (7:30) → Courtyard† (7:50)</td>
-            <td><span class="time-arrives">8:45–9:15 PM</span></td>
-            <td><span class="price-tag">$36</span><br><span class="price-note">public</span></td>
-            <td><a class="book-link book-reindeer" href="https://www.reindeershuttle.com/book-now/" target="_blank">Book</a></td>
-          </tr>
-          <tr>
-            <td><span class="provider-badge badge-limo">Lafayette Limo</span></td>
-            <td><span class="time-big">8:30 PM</span></td>
-            <td class="stops-text">Limo Office (8:30) → Home2Suites (8:35) → Purdue West (8:45) → State St/PMU (8:55) → Holiday Inn (9:05) → Courtyard Lafayette (9:20)</td>
-            <td><span class="time-arrives">10:30 PM</span></td>
-            <td><span class="price-tag">$25</span><br><span class="price-note">online</span></td>
-            <td><a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book</a></td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="footnote">† Courtyard Marriott Lafayette is a Reindeer flag stop — must be reserved in advance. Reindeer's last WL→IND run is 7:00 PM.</p>
+      <div class="provider-card">
+        <h4>🚐 Lafayette Limo</h4>
+        <div class="route-block">
+          <span class="dir-label">Purdue → IND</span>
+          <div class="stops">Limo Office → Home2Suites<span class="off">+5m</span> → Purdue West<span class="off">+15m</span> → State St/PMU<span class="off">+25m</span> → Holiday Inn<span class="off">+35m</span> → Courtyard Lafayette<span class="off">+50m</span></div>
+          <div class="trip-dur">⏱ Trip duration: 2h00m</div>
+        </div>
+        <div class="route-block">
+          <span class="dir-label">IND → Purdue</span>
+          <div class="stops">Courtyard Lafayette<span class="off">+70m</span> → Holiday Inn<span class="off">+85m</span> → State St/PMU<span class="off">+90m</span> → Purdue West<span class="off">+100m</span> → Home2Suites<span class="off">+110m</span></div>
+          <div class="trip-dur">⏱ Trip duration: 2h00m</div>
+        </div>
+        <div class="card-meta">
+          One-way: <strong>$25</strong> online · <strong>$27</strong> phone · round trip $45 · children 2 &amp; under free · ages 3–12 $12.50 online<br>
+          Airport zone: <strong>Zone 5, Ground Transportation Center</strong>
+        </div>
+        <div class="book-row">
+          <a class="book-link book-limo" href="https://laflimo.jumpseatapp.com" target="_blank">Book online</a>
+          <span class="phone">📞 765-497-3828</span>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -776,14 +514,6 @@
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('panel-' + tab).classList.add('active');
-    btn.classList.add('active');
-  }
-
-  function switchSub(prefix, sub, btn) {
-    const panel = document.getElementById('panel-' + prefix);
-    panel.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
-    panel.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(prefix + '-' + sub).classList.add('active');
     btn.classList.add('active');
   }
 </script>

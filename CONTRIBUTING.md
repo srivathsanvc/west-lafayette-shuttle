@@ -9,20 +9,20 @@ Thanks for helping keep this timetable accurate! The most common contribution is
    - Lafayette Limo (IND): https://lafayettelimo.com/services/indianapolis-airport-shuttle-service
    - Lafayette Limo (ORD): https://lafayettelimo.com/services/ohare-airport-shuttle-service
 
-2. **Open `index.html`** and find the relevant `<table>` section. Tables are organized in this order inside the file:
-   - ORD → West Lafayette (`id="ord-to-wl"`)
-   - West Lafayette → ORD (`id="ord-to-ord"`)
-   - IND → West Lafayette (`id="ind-to-wl"`)
-   - West Lafayette → IND (`id="ind-to-ind"`)
+2. **Open `index.html`** and find the relevant `<table>` section. Each airport tab (`#panel-ord`, `#panel-ind`) holds two tables side by side:
+   - ORD → Purdue (`id="ord-to-wl"`) / Purdue → ORD (`id="ord-to-ord"`)
+   - IND → Purdue (`id="ind-to-wl"`) / Purdue → IND (`id="ind-to-ind"`)
 
 3. **Edit the `<tbody>` rows.** Each shuttle departure is one `<tr>`. The column order is:
-   `Provider | Departs | Stops | Arrives | Fare | Book`
+   `Provider | Departs | Arrives`
 
-4. **Keep rows sorted by departure time** within each table (earliest at top).
+   Stops, fare, and the book link are **not** repeated per row — they live once per provider in the "Provider reference" card below the two tables (one card covers both directions). If you're adding or removing a departure, only the table row changes; if the stop sequence, duration, or fare itself changed, update that provider's card too.
 
-5. **Update pricing** in the info cards near the top of each tab panel if fares changed.
+4. **Keep rows sorted by departure time** within each table (earliest at top), interleaving providers chronologically rather than grouping by provider.
 
-6. **Test locally** before submitting — open `index.html` in a browser and click through all four tab combinations.
+5. **Update pricing, stops, or duration** in the relevant provider card's `.route-block` / `.card-meta`, not in the table rows.
+
+6. **Test locally** before submitting — open `index.html` in a browser and click through both airport tabs.
 
 7. **Open a PR** with a title like `Update Reindeer IND schedule – Aug 2026` and link to the source page you used.
 

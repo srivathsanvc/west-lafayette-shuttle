@@ -28,10 +28,10 @@ docs/
 ## Key conventions
 
 ### HTML structure
-- Main tabs: `#panel-ord` and `#panel-ind` (toggled by `switchTab()`)
-- Sub-tabs within each: IDs follow the pattern `{airport}-to-wl` and `{airport}-to-{airport}`
-- Each shuttle departure = one `<tr>` inside a `<tbody>`
-- Rows must stay sorted by departure time (earliest first)
+- Main tabs: `#panel-ord` and `#panel-ind` (toggled by `switchTab()`) — these are the only tabs; direction is not tab-switched
+- Each airport tab holds two tables side by side (`.tables-row`), IDs `{airport}-to-wl` and `{airport}-to-{airport}`, plus a "Provider reference" section below (`.provider-grid`) with one card per provider covering both directions
+- Each shuttle departure = one `<tr>` inside a `<tbody>`, columns `Provider | Departs | Arrives` only — stops, fare, and the book link live once per provider in that provider's reference card, not per row
+- Rows must stay sorted by departure time (earliest first), with providers interleaved chronologically rather than grouped
 
 ### CSS
 - All colors are CSS variables defined in `:root` — never use hardcoded hex values in rules
@@ -53,10 +53,11 @@ docs/
 
 ### Add a new departure row
 Find the right `<tbody>` by section ID, insert a `<tr>` in time order, follow the column pattern:
-`Provider badge | Depart time + TZ | Stops text | Arrive time | Price tag + note | Book link`
+`Provider badge | Depart time + TZ | Arrive time`
+No stops/fare/book cells — those aren't repeated per row. If the new departure's stop sequence or duration differs from that provider's existing rows, update the matching `.route-block` in its provider card too.
 
 ### Update a fare
-Find the `<span class="price-tag">` in the relevant row, update the dollar amount. Also check the info card at the top of the tab panel — it lists pricing separately.
+Find the provider's `.provider-card` (`.card-meta`) in the relevant airport tab and update the dollar amount there — fares live once per provider, not per row.
 
 ### Change the tab color scheme
 Edit the `.tab-btn.ord-tab` / `.tab-btn.ind-tab` rules and update the corresponding CSS variables. Keep contrast ratio ≥ 4.5:1 for text on colored backgrounds.
